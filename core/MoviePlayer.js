@@ -62,7 +62,6 @@ class MoviePlayerClass{
             let posit = clip.charid
             let hero = hero_posit[`hero_posit_${posit}`]
             let soundurl = `./Assets/audio/${hero.toString().padStart(3, '0')}/Showing_${hero.toString().padStart(3, '0')}_${id.toString().padStart(2, '0')}${posit.toString().padStart(2, '0')}/anime_${hero.toString().padStart(2, '0')}_${id.toString().padStart(2, '0')}${posit.toString().padStart(2, '0')}_${clip.clipid}.mp3`
-            // PIXI.sound.add(`${clip.charid}_${clip.clipid}`, soundurl)
             const sound = await PIXI.sound.Sound.from({
                 url: soundurl,
                 preload: true,
@@ -73,7 +72,6 @@ class MoviePlayerClass{
 
             this._audio.push({
                 delayTime : clip.Time,
-                // clipid : `${clip.charid}_${clip.clipid}`
                 clip : sound
             })
 
@@ -93,36 +91,35 @@ class MoviePlayerClass{
         this._container.visible = true
         
         controller.play()
-        this._gameapp.Ticker.add((delta) => this.update(delta))
-        // console.log(controller)
-        // controller.ontimeupdate = () => {
-        //     this._times = controller.currentTime
-        //     this._audio.forEach((clip, index, obj) => {
-        //         if(this._times > (clip.delayTime / 1000)){
-        //             PIXI.sound.play(clip.clipid)
-        //             obj.splice(index, 1);
-        //         }
-        //     });
-        // }
+        this._gameapp.Ticker.add((delta) => this.update(delta, controller))
+
         controller.onended = ()=>{
             this._container.removeChild(this._videoSprit);
             this._container.visible = false
-            this._gameapp.Ticker.remove((delta) => this.update(delta))
+            this._gameapp.Ticker.remove((delta) => this.update(delta, controller))
             this._times = 0
-        }
 
+            setTimeout(() => {
+                window.location.replace('./')
+            }, 1000);
+        }
     }
 
-    update(delta){
-        this._times += (1 / 60) * delta;
-        this._audio.forEach((clip, index, obj) => {
-            if(this._times > (clip.delayTime / 1000)){
-                // PIXI.sound.play(clip.clipid)
-                clip.clip.play()
-                obj.splice(index, 1);
-                console.log(obj.length)
-            }
-        });
+    update(delta, controller){
+        // this._times += (1 / 60) * delta;
+        let _timenow = controller.currentTime * 1000
+        if(this._audio.length === 0){
+            return
+        }
+        if(this._audio[0].delayTime-3> _timenow){
+            return
+        }
+
+        let clip = this._audio.shift();
+        // console.log(clip.delayTime, _timenow)
+        if(clip.delayTime -3 <= _timenow){
+            clip.clip.play()
+        }
 
     }
 
