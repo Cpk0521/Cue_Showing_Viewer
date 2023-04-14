@@ -12,8 +12,10 @@ let app = GameApp.create(element, {
     height : 750
 })
 
+const _url = 'https://raw.githubusercontent.com/Cpk0521/Cue_Showing_Viewer/'
+
 MoviePlayer.setUp(app)
-MoviePlayer.load(`./Assets/data/showing${key.toString().padStart(2, 0)}.json`, {
+MoviePlayer.load(`${_url}/Assets/data/showing${key.toString().padStart(2, 0)}.json`, {
     hero_posit_1 : hero_posit_1,
     hero_posit_2 : hero_posit_2,
     hero_posit_3 : hero_posit_3,

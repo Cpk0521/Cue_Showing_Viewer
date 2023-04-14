@@ -1,6 +1,8 @@
 var hash = location.hash.replace(/^#/, '');
 hash ? hash : hash = '10'
 
+var _url = 'https://raw.githubusercontent.com/Cpk0521/Cue_Showing_Viewer/'
+
 function togglePage(key) {
     const from = document.getElementById('form')
     from.innerHTML = ''
@@ -10,7 +12,7 @@ function togglePage(key) {
 
         inner += `
             <div class='col-lg col-sm-5 mb-2'>
-                <img alt src="./Assets/sprite/${key}/AnimeChara_0${key}${(index+1).toString().padStart(2, 0)}.png" class="mb-2">
+                <img alt src="${_url}/Assets/sprite/${key}/AnimeChara_0${key}${(index+1).toString().padStart(2, 0)}.png" class="mb-2">
                 <select class="form-select px-2" name="char${index+1}">
                 <option selected value="1">六石陽菜</option>
                 <option value="2">鷹取舞花</option>
@@ -36,7 +38,7 @@ function togglePage(key) {
     inner += `
             <div class='col d-flex flex-column justify-content-center'>
                 <input name='key' class="d-none" value="${key}">
-                <button type='submit' class='btn mx-auto' form="form" value="Submit"><img alt src="./Assets/sprite/ShowingStartButton.png" style="height: min-content;"></button>
+                <button type='submit' class='btn mx-auto' form="form" value="Submit"><img alt src="${_url}/Assets/sprite/ShowingStartButton.png" style="height: min-content;"></button>
             </div>
         </div>
     `
