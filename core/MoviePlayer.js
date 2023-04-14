@@ -62,11 +62,12 @@ class MoviePlayerClass{
             let posit = clip.charid
             let hero = hero_posit[`hero_posit_${posit}`]
             let soundurl = `./Assets/audio/${hero.toString().padStart(3, '0')}/Showing_${hero.toString().padStart(3, '0')}_${id.toString().padStart(2, '0')}${posit.toString().padStart(2, '0')}/anime_${hero.toString().padStart(2, '0')}_${id.toString().padStart(2, '0')}${posit.toString().padStart(2, '0')}_${clip.clipid}.mp3`
+
             const sound = await PIXI.sound.Sound.from({
                 url: soundurl,
                 preload: true,
                 loaded: function() {
-                    console.log('Sound loaded');
+                    console.log(`Sound loaded`);
                 }
             });
 
@@ -90,8 +91,8 @@ class MoviePlayerClass{
         this._container.addChild(this._videoSprite)
         this._container.visible = true
         
-        controller.play()
         this._gameapp.Ticker.add((delta) => this.update(delta, controller))
+        controller.play()
 
         controller.onended = ()=>{
             this._container.removeChild(this._videoSprit);
@@ -101,26 +102,32 @@ class MoviePlayerClass{
 
             setTimeout(() => {
                 window.location.replace('./')
-            }, 1000);
+            }, 1500);
         }
     }
 
     update(delta, controller){
         // this._times += (1 / 60) * delta;
-        let _timenow = controller.currentTime * 1000
+        let _timenow = controller.currentTime * 1000      
+        this._audiocheck(_timenow)
+    }
+
+    _audiocheck(timenow){
         if(this._audio.length === 0){
             return
         }
-        if(this._audio[0].delayTime-3> _timenow){
+
+        if(this._audio[0].delayTime -3 > timenow){
             return
         }
 
         let clip = this._audio.shift();
-        // console.log(clip.delayTime, _timenow)
-        if(clip.delayTime -3 <= _timenow){
+
+        if(clip.delayTime -3 <= timenow){
             clip.clip.play()
         }
 
+        this._audiocheck(timenow)
     }
 
 }
