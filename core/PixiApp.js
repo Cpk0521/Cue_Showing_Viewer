@@ -1,13 +1,13 @@
 class GameApp extends PIXI.utils.EventEmitter {
 
-    static instance = null
+    static shared = null
 
     constructor(element, {width, height, background, alpha}){
         super()
 
-        //set instance
-        if(GameApp.instance != this){
-            GameApp.instance = this
+        //set shared
+        if(GameApp.shared != this){
+            GameApp.shared = this
         }
 
         this._width = width
@@ -46,24 +46,13 @@ class GameApp extends PIXI.utils.EventEmitter {
     }
 
     _resize = () => {
-        // let width = document.documentElement.clientWidth;
-        // let height = document.documentElement.clientHeight;
-        let width = window.innerWidth;
-        let height = window.innerHeight;
+        let width = document.documentElement.clientWidth;
+        let height = document.documentElement.clientHeight;
 
-        let ratioX = width / (this._width ?? 1480)
-        let ratioY = height / (this._height ?? 720)
+        let ratio = Math.min(width / (this._width ?? 1480), height / (this._height ?? 720))
 
-        let reX = 0;
-        let reY = 0;
-
-        if(ratioX > ratioY){
-            reX = (this._width ?? 1480) * ratioY 
-            reY = (this._height ?? 720) * ratioY
-        }else{
-            reX = (this._width ?? 1480) * ratioX
-            reY = (this._height ?? 720) * ratioX
-        }
+        let reX = (this._width ?? 1480) * ratio
+        let reY = (this._height ?? 720) * ratio
 
         this._app.view.style.width = reX + 'px';
         this._app.view.style.height = reY + 'px';
@@ -74,13 +63,13 @@ class GameApp extends PIXI.utils.EventEmitter {
     destroy(){
         this._app.destroy(true, { children: true, texture: true, baseTexture: true });
         this._app = null
-        GameApp.instance = null
+        GameApp.shared = null
 
         this.emit('AppOnDestroy')
     }
 
     static get App(){
-        return this.instance?.App
+        return this.shared?.App
     }
 
     get App(){
@@ -88,7 +77,7 @@ class GameApp extends PIXI.utils.EventEmitter {
     }
 
     static get Ticker(){    
-        return this.instance?.Ticker
+        return this.shared?.Ticker
     }
 
     get Ticker(){
@@ -96,7 +85,7 @@ class GameApp extends PIXI.utils.EventEmitter {
     }
 
     static get mainContainer(){
-        return this.instance?.mainContainer
+        return this.shared?.mainContainer
     }
 
     get mainContainer(){
@@ -110,7 +99,5 @@ class GameApp extends PIXI.utils.EventEmitter {
     static get appSize(){
         return { width : this.App.renderer.width, height : this.App.renderer.height }
     }
-
-
 
 }

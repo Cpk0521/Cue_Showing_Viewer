@@ -34,10 +34,10 @@ function togglePage(key) {
     }
 
     inner += `
-        <div class='col d-flex flex-column justify-content-center'>
-            <input name='key' class="d-none" value="${key}">
-            <button type='submit' class='btn mx-auto' form="form" value="Submit"><img alt src="./Assets/sprite/ShowingStartButton.png" style="height: min-content;"></button>
-        </div>
+            <div class='col d-flex flex-column justify-content-center'>
+                <input name='key' class="d-none" value="${key}">
+                <button type='submit' class='btn mx-auto' form="form" value="Submit"><img alt src="./Assets/sprite/ShowingStartButton.png" style="height: min-content;"></button>
+            </div>
         </div>
     `
 

@@ -1,11 +1,12 @@
 class MoviePlayerClass{
 
     _loader = PIXI.Assets
+    _url = 'https://raw.githubusercontent.com/Cpk0521/Cue_Showing_Viewer/'
     constructor(){
         this._container = new PIXI.Container()
         this._videoSprite = null
         this._audio = []
-        this._times = 0
+        this._showingId = ''
     }
 
     setUp(PixiApp){
@@ -14,7 +15,7 @@ class MoviePlayerClass{
     }
 
     async _waitingToch(){
-        let touchToStartimg = await this._loader.load('./Assets/common/Common_TouchScreenText.png')
+        let touchToStartimg = await this._loader.load(`${this._url}/Assets/common/Common_TouchScreenText.png`)
         let touchToStart = new PIXI.Sprite(touchToStartimg);
         this._gameapp?.mainContainer.addChild(touchToStart)
 
@@ -46,9 +47,11 @@ class MoviePlayerClass{
 
         let {id, movie, soundClip} = Data
 
+        this._showingId = id.toString().padStart(2, '0')
+
         //video 
         let ratio = (GameApp.appSize.height / 1080)
-        let texture = PIXI.Texture.from(`./Assets/movie/${movie}`);
+        let texture = PIXI.Texture.from(`${this._url}/Assets/movie/${movie}`);
         texture.baseTexture.resource.autoPlay = false
         this._videoSprite = new PIXI.Sprite(texture);
         
@@ -61,7 +64,7 @@ class MoviePlayerClass{
         soundClip.forEach(async (clip) => {
             let posit = clip.charid
             let hero = hero_posit[`hero_posit_${posit}`]
-            let soundurl = `./Assets/audio/${hero.toString().padStart(3, '0')}/Showing_${hero.toString().padStart(3, '0')}_${id.toString().padStart(2, '0')}${posit.toString().padStart(2, '0')}/anime_${hero.toString().padStart(2, '0')}_${id.toString().padStart(2, '0')}${posit.toString().padStart(2, '0')}_${clip.clipid}.mp3`
+            let soundurl = `${this._url}/Assets/audio/${hero.toString().padStart(3, '0')}/Showing_${hero.toString().padStart(3, '0')}_${this._showingId}${posit.toString().padStart(2, '0')}/anime_${hero.toString().padStart(2, '0')}_${this._showingId}${posit.toString().padStart(2, '0')}_${clip.clipid}.mp3`
 
             const sound = await PIXI.sound.Sound.from({
                 url: soundurl,
@@ -98,16 +101,15 @@ class MoviePlayerClass{
             this._container.removeChild(this._videoSprit);
             this._container.visible = false
             this._gameapp.Ticker.remove((delta) => this.update(delta, controller))
-            this._times = 0
 
             setTimeout(() => {
-                window.location.replace('./')
+                window.location.replace(`./#${this._showingId}`)
             }, 1500);
         }
     }
 
     update(delta, controller){
-        // this._times += (1 / 60) * delta;
+        // let _times += (1 / 60) * delta;
         let _timenow = controller.currentTime * 1000      
         this._audiocheck(_timenow)
     }
