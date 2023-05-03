@@ -50,7 +50,8 @@ class MoviePlayerClass{
         this._showingId = id.toString().padStart(2, '0')
 
         //video 
-        let ratio = (GameApp.appSize.height / 1080)
+        // let ratio = (GameApp.appSize.height / 1080)
+        let ratio = Math.min(GameApp.appSize.height / 1080, GameApp.appSize.width / 1920)
         let texture = PIXI.Texture.from(`${this._url}/Assets/movie/${movie}`);
         texture.baseTexture.resource.autoPlay = false
         this._videoSprite = new PIXI.Sprite(texture);
@@ -70,7 +71,7 @@ class MoviePlayerClass{
                 url: soundurl,
                 preload: true,
                 loaded: function() {
-                    console.log(`Sound loaded`);
+                    console.log(`[Player] ${clip.clipid} loaded`);
                 }
             });
 
